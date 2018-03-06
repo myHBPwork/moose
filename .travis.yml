@@ -37,5 +37,6 @@ before_script:
 
 
 script:
-    - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./_travis/build_on_linux.sh ; fi
-    - if [ "$TRAVIS_OS_NAME" == "osx" ]; then ./_travis/build_on_osx.sh ; fi
+    - ./.travis_build.sh
+    - sudo dpkg -i ../moose*.deb 
+    - python -c 'import moose;print(moose.version());print(moose.__file__)'
