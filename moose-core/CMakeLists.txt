@@ -1,6 +1,7 @@
 set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
+
 project(pymoose)
 
 if(COMMAND cmake_policy)
@@ -453,11 +454,8 @@ add_dependencies( copy_pymoose _moose )
 
 
 ######################### INSTALL ##############################################
-
 install(TARGETS moose.bin DESTINATION bin CONFIGURATIONS Debug)
-
 install(TARGETS libmoose DESTINATION lib CONFIGURATIONS Debug)
-
 install(PROGRAMS ${CMAKE_CURRENT_SOURCE_DIR}/scripts/moose
     DESTINATION bin CONFIGURATIONS Debug
     )
@@ -478,7 +476,6 @@ if(${CMAKE_BUILD_TOOL} MATCHES "make")
         "=======================================\n"
         )
 endif()
-
 
 
 ############################ CTEST ######################################

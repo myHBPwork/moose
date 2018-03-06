@@ -16,6 +16,7 @@ import os
 import sys
 from distutils.core import setup
 
+
 # NOTE: Though setuptool is preferred we use distutils.
 # 1. setuptool normalize VERSION even when it is compatible with PyPI
 # guidelines. This caused havoc on our OBS build.
@@ -37,9 +38,9 @@ print( 'Got %s from VERSION file' % version )
 suffix = '.so'
 try:
     import importlib.machinery
-    suffix = '.%s' % importlib.machinery.EXTENSION_SUFFIXES[0].split('.')[-1]
+    suffix = importlib.machinery.EXTENSION_SUFFIXES[0].split('.')[-1]
 except Exception as e:
-    print( '[WARN] Failed to determine importlib suffix due to %s' % e )
+    print( '[WARN] Failed to determine importlib suffix' )
     suffix = '.so'
 
 setup(
