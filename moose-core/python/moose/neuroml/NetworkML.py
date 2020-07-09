@@ -14,7 +14,7 @@ readNetworkML(...) to load from an xml.etree xml element (could be part of a lar
 """
 
 from __future__ import print_function
-from xml.etree import cElementTree as ET
+from xml.etree import ElementTree as ET
 import string
 import os
 from math import cos, sin
@@ -179,7 +179,7 @@ class NetworkML():
             model_filenames = (cellname+'.xml', cellname+'.morph.xml')
             success = False
             for model_filename in model_filenames:
-                model_path = find_first_file(model_filename,self.model_dir)
+                model_path = find_first_file(model_filename, self.model_dir)
                 if model_path is not None:
                     cellDict = mmlR.readMorphMLFromFile(model_path, self.params)
                     success = True
@@ -267,7 +267,7 @@ class NetworkML():
                 else:
                     raise IOError(
                         'For mechanism {0}: files {1} not found under {2}.'.format(
-                            mechanismname, model_filename, self.model_dir
+                            syn_name, model_filename, self.model_dir
                         )
                     )
             weight = float(syn_props.attrib['weight'])

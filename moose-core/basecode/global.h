@@ -15,15 +15,9 @@
 #include <ctime>
 #include <map>
 #include <sstream>
+#include <valarray>
 
-
-#ifdef  USE_BOOST
-//#ifdef BOOST_FILESYSTEM_EXISTS
-#include <boost/filesystem.hpp>
-//#endif                                          /* BOOST_FILESYSTEM_EXISTS */
-#endif
-
-#include "randnum/RNG.h"                        /* Use inbuilt rng */
+#include "../randnum/RNG.h"                        /* Use inbuilt rng */
 #include "../utility/print_function.hpp"
 
 using namespace std;
@@ -62,7 +56,9 @@ extern unsigned int totalTests;
 namespace moose
 {
 
-    extern moose::RNG<double> rng;
+    extern moose::RNG rng;
+
+    extern map<string, valarray<double>> solverProfMap;
 
     /**
      * @brief A global seed for all RNGs in moose. When moose.seed( x ) is called,
@@ -70,7 +66,7 @@ namespace moose
      * initialize them. By default it is initialized by random_device (see
      * global.cpp).
      */
-    extern int __rng_seed__;
+    extern unsigned long __rng_seed__;
 
     /**
      * @brief Fix a path. For testing purpose.
@@ -117,6 +113,18 @@ namespace moose
      * @return  A random number between 0 and 1.
      */
     double mtrand( void );
+
+    /* --------------------------------------------------------------------------*/
+    /**
+     * @Synopsis  Overloaded function. Random number between a and b
+     *
+     * @Param a lower limit.
+     * @Param b Upper limit.
+     *
+     * @Returns   
+     */
+    /* ----------------------------------------------------------------------------*/
+    double mtrand( double a, double b );
 
     /**
      * @brief Create a POSIX compatible path from a given string.
@@ -183,6 +191,36 @@ namespace moose
      */
     string moosePathToUserPath( string path );
 
+    /* --------------------------------------------------------------------------*/
+    /**
+     * @Synopsis  Get the global seed set by call of moose.seed( X )
+     *
+     * @Returns  seed (int).
+     */
+    /* ----------------------------------------------------------------------------*/
+    int getGlobalSeed( );
+
+    /* --------------------------------------------------------------------------*/
+    /**
+     * @Synopsis  Set the seed for all random generator. When seed of a RNG is
+     * not set, this seed it used. It is set to -1 by default.
+     *
+     * @Param seed
+     */
+    /* ----------------------------------------------------------------------------*/
+    void setGlobalSeed( int seed );
+
+    /* --------------------------------------------------------------------------*/
+    /**
+     * @Synopsis  Add solver performance into the global map.
+     *
+     * @Param name Name of the solver.
+     * @Param time Time taken by the solver.
+     * @Param steps Steps.
+     */
+    /* ----------------------------------------------------------------------------*/
+    void addSolverProf( const string& name, double time, size_t steps = 1);
+    void printSolverProfMap( );
 }
 
 #endif   /* ----- #ifndef __MOOSE_GLOBAL_INC_  ----- */

@@ -12,7 +12,13 @@
 # 2.2 GHz. The big model, VHC-neuron, takes almost 90 minutes.
 # This program dumps data to text files for further analysis.
 ########################################################################
-import moogli
+
+try:
+    import moogli
+except ImportError as e:
+    print( "[INFO ] Could not import moogli. Quitting..." )
+    quit()
+    
 import numpy
 import time
 import pylab
@@ -80,13 +86,10 @@ def buildRdesigneur():
                 "Em", "-58e-3", "initVm", "-65e-3" ], \
             [ ".", "#axon#", "RA", "0.5" ] \
         ]
-    spineDistrib = [ \
-            ["spine", '#apical#', "spineSpacing", "20e-6", \
-                "spineSpacingDistrib", "2e-6", \
-                "angle", "0", \
-                "angleDistrib", str( 2*PI ), \
-                "size", "1", \
-                "sizeDistrib", "0.5" ] \
+    spineDistrib = [
+            ["spine", '#apical#', "20e-6", "2e-6",
+                "1", "0.5",
+                "0", str( 2*PI ) ]
         ]
 
     ######################################################################

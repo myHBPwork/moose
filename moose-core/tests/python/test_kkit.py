@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import numpy
 import sys
 import os
@@ -23,7 +22,9 @@ def main():
                 runtime = float( sys.argv[2] )
         if ( len( sys.argv ) == 4 ):
                 solver = sys.argv[3]
-        modelId = moose.loadModel( mfile, 'model', solver )
+        modelId = moose.loadModel( mfile, 'model')
+        moose.mooseAddChemSolver('model',solver)
+
         # Increase volume so that the stochastic solver gssa
         # gives an interesting output
         #compt = moose.element( '/model/kinetics' )

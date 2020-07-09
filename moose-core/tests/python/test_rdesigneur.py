@@ -1,5 +1,4 @@
 """test_rdesigneur.py: 
-
 """
     
 __author__           = "Dilawar Singh"
@@ -12,9 +11,13 @@ __status__           = "Development"
 import sys
 import os
 import numpy as np
+try:
+    import rdesigneur as rd 
+except RuntimeError as e:
+    print( "[WARN ] Could not import rdesigneur. Most likely due to DISPLAY issue." )
+    quit()
 import moose
-import rdesigneur as rd 
-
+    
 def test2( ):
     if moose.exists( '/model' ):
         moose.delete( '/model' )

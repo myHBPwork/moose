@@ -1,10 +1,36 @@
 # -*- coding: utf-8 -*-
 import moose
+print( 'Using moose from %s. VERSION=%s' %  (moose.__file__, moose.__version__) )
 import numpy as np
 import chan_proto
 import param_chan
-from params import *
 
+t_stop = 10
+dend_diameter = 2.2627398e-6
+dend_length =  1.131369936e-6
+Cm = 4.021231698e-12
+Rm = 1865100032
+Em = -0.07100000232
+Vm_0 = -0.0705
+dt = 50e-6
+spines_no = 0
+difshell_no = 2
+difshell_name = "Ca_shell"
+Ca_basal = 50e-6
+Ca_initial = Ca_basal*200
+dca = 200.0e-12
+difbuff_no = 1
+difbuff_name = "Buff"
+btotal = 80.0e-3
+kf =  0.028e6
+kb = 19.6
+d = 66e-12
+inject = 0.1e-9
+gbar = 1
+#MMpump
+km = 0.3e-3
+kcat = 85e-22
+pumps = 1
 
 def linoid(x, param):
     den = (param[2] + np.exp((V + param[3]) / param[4]))
@@ -93,7 +119,6 @@ def addOneChan(chanpath, gbar,comp):
     moose.connect(chan, "channelOut", comp, "handleChannel")
     return chan
 
-
 if __name__ == '__main__':
     lib = moose.Neutral('/library')
     for tick in range(0, 7):
@@ -120,14 +145,9 @@ if __name__ == '__main__':
     pulse.delay[1] = 1e9
 
     chan = chan_proto.chan_proto('/library/CaL12',param_chan.Cal)
-
     m = moose.connect(pulse, 'output', dend, 'injectMsg')
-
     moose.connect(vmtab, 'requestOut', dend, 'getVm')
-
-
     chan = addOneChan('CaL12', gbar, dend)
-
     moose.connect(gktab, 'requestOut', chan, 'getGk')
     moose.connect(iktab, 'requestOut', chan, 'getIk')
     diftab = []
@@ -165,11 +185,9 @@ if __name__ == '__main__':
                 dbuf.bFree = dbuf.bTot
 
     moose.start(t_stop)
-
     t = np.linspace(0, t_stop, len(vmtab.vector))
     fname = 'moose_results_difshell_no_' + str(difshell_no) + '_difbuffer_no_' + str(
         difbuff_no) + '_pump_' + str(pumps) + '_gbar_' + str(gbar) + '.txt'
-    print( fname )
     header = 'time Vm Ik Gk'
     number = 4 + difshell_no * (difbuff_no + 1)
     res = np.zeros((len(t), number))
@@ -185,5 +203,8 @@ if __name__ == '__main__':
             for j, buf in enumerate(buftab[i]):
                 res[:, 4 + i * (difbuff_no + 1) + j + 1] = buf.vector
                 header += ' difshell_' + str(i) + '_difbuff_' + str(j)
-    np.savetxt(fname, res, header=header, comments='')
-
+    assert np.isclose(res.mean(), 0.60599, atol=1e-5), \
+            'Expected 0.60599, got %g' % np.mean(res)
+    assert np.isclose(np.std(res), 1.9505, atol=1e-3), \
+            'Expected 1.9505 got %g' % np.std(res) 
+    print( 'All done' )

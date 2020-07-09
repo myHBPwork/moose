@@ -1,11 +1,13 @@
-[![Build Status - master](https://travis-ci.org/BhallaLab/moose.svg?branch=master)](https://travis-ci.org/BhallaLab/moose)   [![Documentation Status](https://readthedocs.org/projects/moose/badge/?version=latest)](https://readthedocs.org/projects/moose/?badge=latest)
-| [__Linux Packages__](https://software.opensuse.org//download.html?project=home%3Amoose&package=moose) | 
-[__Document__](http://moose.readthedocs.io/en/latest/)
+[![Build Status - master](https://travis-ci.org/BhallaLab/moose.svg?branch=master)](https://travis-ci.org/BhallaLab/moose)   [![Documentation Status](https://readthedocs.org/projects/moose/badge/?version=latest)](https://readthedocs.org/projects/moose/?badge=latest) 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/BhallaLab/moose-binder/master)
+
+[__Click here for stable Linux Packages__](https://software.opensuse.org//download.html?project=home%3Amoose&package=moose) | 
+[__Click here for nightly Linux Packages__](https://software.opensuse.org//download.html?project=home%3Amoose&package=moose-nightly) | 
+
 
 This is the parent repository of [MOOSE simulator](https://moose.ncbs.res.in).
-It keeps the snanshots of its components: c++ core and its Python 
-interface (pymoose), MOOSE's Graphical User Interface (GUI). This should be the 
-source of stable MOOSE code.
+It keeps stable snapshots of its components: C++ core, Python interface (pymoose)
+, and Graphical User Interface (GUI). 
 
 # About
 
@@ -35,20 +37,21 @@ cell.p formats, HDF5 and NSDF for data writing.
 
 # Documentation
 
-MOOSE Documentation can be found at https://moose.ncbs.res.in/?q=documentation .  
+MOOSE Documentation can be found at https://moose.ncbs.res.in/?q=documentation 
+(could be little outdated) or at https://readthedocs.org/projects/moose (nightly build).
 
 # VERSION
 
 ## Chamcham Series
 
-Chamcham series (current version 3.1.3) is an evolutionary update. It has a new
+Chamcham series (current version 3.1.4) is an evolutionary update. It has a new
 Python-based SBML reader, improved handling of reaction-diffusion systems, and
 substantial refinements to the rdesigneur interface for setting up multiscale
 models.  Several additional rdesigneur tutorials have been implemented. 
 
 # Installing
 
-See the file  [NSTALL.md](INSTALL.md).
+See the file  [INSTALL.md](INSTALL.md).
 
 # AUTHORS
 

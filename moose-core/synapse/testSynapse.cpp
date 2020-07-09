@@ -10,7 +10,7 @@
 #ifdef DO_UNIT_TESTS
 
 #include <queue>
-#include "header.h"
+#include "../basecode/header.h"
 #include "Synapse.h"
 #include "SynEvent.h"
 #include "SynHandlerBase.h"
@@ -18,7 +18,6 @@
 #include "RollingMatrix.h"
 #include "SeqSynHandler.h"
 #include "../shell/Shell.h"
-#include "../randnum/randnum.h"
 
 double doCorrel( RollingMatrix& rm, vector< vector< double >> & kernel )
 {

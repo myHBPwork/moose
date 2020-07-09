@@ -1,11 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
-
 project(moose)
 set(CMAKE_BUILD_TYPE Release)
-
-if(POLICY CMP0048)
-    cmake_policy(SET CMP0048 OLD )
-endif(POLICY CMP0048)
 
 # If from command line, version info is not passed, use the git to generate a
 # version file. If GIT fails, use the previous known version.
@@ -113,9 +108,7 @@ if(WITH_GUI)
     add_dependencies(examples  gui)
 endif()
 
-
-
-install(DIRECTORY ${PYMOOSE_INSTALL_DIR}/usr/
+install(DIRECTORY ${PYMOOSE_INSTALL_DIR}/
     DESTINATION ${CMAKE_INSTALL_PREFIX}
     CONFIGURATIONS Release
     PATTERN ".git" EXCLUDE

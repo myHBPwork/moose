@@ -31,7 +31,12 @@
 # This example illustrates loading a model from an SWC file, inserting
 # spines, and viewing it.
 
-import moogli
+try:
+    import moogli
+except Exception as e:
+    print( "[INFO ] Failed to import moogli. Quitting..." )
+    quit()
+
 import moose
 from matplotlib import cm
 from PyQt4 import Qt, QtCore, QtGui
@@ -85,7 +90,6 @@ spines, and viewing it.
     compts[0].inject = inject
     ecomptPath = [x.path for x in compts]
     morphology = moogli.extensions.moose.read(path = "/model/elec", vertices=15)
-
     #morphology = moogli.read_morphology_from_moose(name = "", path = "/model/elec")
     #morphology.create_group( "group_all", ecomptPath, -0.08, 0.02, \
     #        [0.0, 0.5, 1.0, 1.0], [1.0, 0.0, 0.0, 0.9] )

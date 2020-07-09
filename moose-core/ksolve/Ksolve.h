@@ -10,6 +10,10 @@
 #ifndef _KSOLVE_H
 #define _KSOLVE_H
 
+#include <chrono>
+
+using namespace std::chrono;
+
 class Stoich;
 
 class Ksolve: public ZombiePoolInterface
@@ -41,7 +45,6 @@ public:
     Id getDsolve() const;
     void setDsolve( Id dsolve ); /// Inherited from ZombiePoolInterface.
 
-
     unsigned int getNumLocalVoxels() const;
     unsigned int getNumAllVoxels() const;
     /**
@@ -54,14 +57,13 @@ public:
     vector< double > getNvec( unsigned int voxel) const;
     void setNvec( unsigned int voxel, vector< double > vec );
 
-#if PARALLELIZE_KSOLVE_WITH_CPP11_ASYNC
     // Set number of threads to use (for deterministic case only).
     unsigned int getNumThreads( ) const;
     void setNumThreads( unsigned int x );
 
-    // Parallel advance().
-    void parallel_advance(int begin, int end, size_t nWorkers, ProcPtr p);
-#endif
+    void advance_chunk( const size_t begin, const size_t end, ProcPtr p );
+
+    void advance_pool( const size_t i, ProcPtr p );
 
     /**
      * This does a quick and dirty estimate of the timestep suitable
@@ -76,30 +78,25 @@ public:
     void reinit( const Eref& e, ProcPtr p );
     void initProc( const Eref& e, ProcPtr p );
     void initReinit( const Eref& e, ProcPtr p );
+
     /**
      * Handles request to change volumes of voxels in this Ksolve, and
      * all cascading effects of this. At this point it won't handle
      * change in size of voxel array.
      */
     void updateVoxelVol( vector< double > vols );
-    //////////////////////////////////////////////////////////////////
-    // Utility for SrcFinfo
-    //////////////////////////////////////////////////////////////////
 
-    //////////////////////////////////////////////////////////////////
     // Solver interface functions
-    //////////////////////////////////////////////////////////////////
     unsigned int getPoolIndex( const Eref& e ) const;
     unsigned int getVoxelIndex( const Eref& e ) const;
 
-    //////////////////////////////////////////////////////////////////
     // ZombiePoolInterface inherited functions
-    //////////////////////////////////////////////////////////////////
-
     void setN( const Eref& e, double v );
     double getN( const Eref& e ) const;
+
     void setNinit( const Eref& e, double v );
     double getNinit( const Eref& e ) const;
+
     void setDiffConst( const Eref& e, double v );
     double getDiffConst( const Eref& e ) const;
 
@@ -127,29 +124,10 @@ public:
     void updateRateTerms( unsigned int index );
 
     //////////////////////////////////////////////////////////////////
-    // Functions for cross-compartment transfer
-    //////////////////////////////////////////////////////////////////
-    void setupXfer( Id myKsolve, Id otherKsolve,
-                    unsigned int numProxyMols,
-                    const vector< VoxelJunction >& vj );
-
-    void assignXferIndex( unsigned int numProxyMols,
-                          unsigned int xferCompt,
-                          const vector< vector< unsigned int > >& voxy );
-
-    void assignXferVoxels( unsigned int xferCompt );
-
-    unsigned int assignProxyPools( const map< Id, vector< Id > >& xr,
-                                   Id myKsolve, Id otherKsolve, Id otherComptId );
-
-    void buildCrossReacVolScaling( Id otherKsolve,
-                                   const vector< VoxelJunction >& vj );
-    //////////////////////////////////////////////////////////////////
     // for debugging
     void print() const;
 
     //////////////////////////////////////////////////////////////////
-    static SrcFinfo2< Id, vector< double > >* xComptOut();
     static const Cinfo* initCinfo();
 
 private:
@@ -158,12 +136,10 @@ private:
     double epsAbs_;
     double epsRel_;
 
-#if PARALLELIZE_KSOLVE_WITH_CPP11_ASYNC
     /**
      * @brief Number of threads to use. Only applicable for deterministic case.
      */
     unsigned int numThreads_;
-#endif
 
     /**
      * Each VoxelPools entry handles all the pools in a single voxel.
@@ -187,6 +163,14 @@ private:
 
     /// Pointer to diffusion solver
     ZombiePoolInterface* dsolvePtr_;
+
+    // Timing and benchmarking related variables.
+    size_t numSteps_  = 0;
+
+    // Time taken in all process function in us.
+    double totalTime_ = 0.0;
+
+    high_resolution_clock::time_point t0_, t1_;
 
 };
 

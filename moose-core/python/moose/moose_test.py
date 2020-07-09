@@ -4,7 +4,7 @@ Test MOOSE installation with moose-examples.
 
 """
 
-from __future__ import print_function
+from __future__ import print_function, division
 
 __author__           = "Dilawar Singh"
 __copyright__        = "Copyright 2016, Dilawar Singh"
@@ -29,9 +29,7 @@ import time
 logging.basicConfig(
         level=logging.DEBUG,
         format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-        datefmt='%m-%d %H:%M',
-        filename='tests.log',
-        filemode='w'
+        datefmt='%m-%d %H:%M'
         )
 console = logging.StreamHandler()
 console.setLevel(logging.WARNING)
@@ -87,6 +85,9 @@ class Command(object):
             self.process.terminate()
             thread.join()
 
+        if self.process.stderr is not None:
+            _logger.warn( '%s' % self.process.stderr.read() )
+
         return self.process.returncode
 
 def init_test_dir( ):
@@ -101,8 +102,8 @@ def init_test_dir( ):
     os.chdir( test_dir_ )
 
 def suitable_for_testing( script ):
-    with open( script ) as f:
-        txt = f.read( )
+    with open(script, 'r', encoding='utf8') as f:
+        txt = f.read()
         if not re.search( r'main\(\s*\)', txt ):
             _logger.debug( 'Script %s does not contain main( )' % script )
             return False, 'main( ) not found'
@@ -116,7 +117,7 @@ def run_test( index, testfile, timeout,  **kwargs):
     """
     global test_status_
     global total_
-    pyExec = os.environ.get( 'PYTHON_EXECUTABLE', '/usr/bin/python' )
+    pyExec = os.environ.get( 'PYTHON_EXECUTABLE', sys.executable )
     cmd = Command( [ pyExec, testfile ] )
 
     ti = time.time( )
@@ -179,7 +180,7 @@ def test_all( timeout, **kwargs ):
     _logger.info( 'Total %d valid tests found' % len( scripts ) )
     total_ = len( scripts )
     for i, s in enumerate( scripts ):
-        _logger.info( 'Running test : %s' % s )
+        _logger.info( 'Running test (timeout=%s) : %s' % (timeout,s))
         run_test(i, s, timeout, **kwargs )
 
 

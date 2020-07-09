@@ -14,8 +14,8 @@
 #include <iostream>
 #include <cassert>
 #include <cmath>
-#include "SparseMatrix.h"
-#include "utility/numutil.h"
+#include "../basecode/SparseMatrix.h"
+#include "../utility/numutil.h"
 #include "KinSparseMatrix.h"
 
 using namespace std;
@@ -166,7 +166,7 @@ void makeVecUnique( vector< unsigned int >& v )
 
 
 #ifdef DO_UNIT_TESTS
-#include "header.h"
+#include "../basecode/header.h"
 
 void testKinSparseMatrix()
 {

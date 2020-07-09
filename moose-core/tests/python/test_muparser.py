@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
-
 """test_muparser.py:
-
 Modified from https://elifesciences.org/articles/25827 , Fig4.py
-
 """
 import sys
 import os
+import matplotlib
+matplotlib.use( 'Agg' )
 import numpy as np
 import sys
 import numpy as np
 import moose
 import abstrModelEqns9 as ame
-import rdesigneur as rd
-
+try:
+    import rdesigneur as rd
+except RuntimeError as e:
+    print( 'Warn: Failed to import rdesigneur. most likely DISPLAY is not set' )
 
 def singleCompt( name, params ):
     mod = moose.copy( '/library/' + name + '/' + name, '/model' )
